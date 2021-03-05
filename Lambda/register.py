@@ -21,15 +21,15 @@ def handler(event,context):
         )
         r_status = int(res["ResponseMetadata"]["HTTPStatusCode"])
         if(r_status == 200):
-            return return_message("Itens Inseridos com sucesso!", 200, "status" )
+            return return_message("Itens Inseridos com sucesso!", 200, "status", email )
         else:
-            return return_message("Algo inesperado aconteceu ao inserir items na tabela", 400, "erro")
+            return return_message("Algo inesperado aconteceu ao inserir items na tabela", 400, "erro", "")
     else:
-        return return_message("Erro! Parametros insuficientes!", 400, "erro")
+        return return_message("Erro! Parametros insuficientes!", 400, "erro",  "")
 
-def return_message(mensage, status_code, mensage_key):
+def return_message(mensage, status_code, mensage_key, email):
     return {
             'statusCode': status_code,
-            'headers': { 'Content-Type': 'application/json' },
-            'body': json.dumps({mensage_key: mensage})
+            'headers': { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
+            'body': json.dumps({mensage_key: mensage, "email": email})
         }
