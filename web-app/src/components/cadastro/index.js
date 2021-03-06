@@ -3,11 +3,11 @@ import { Formik, Form, Field } from 'formik';
 
 import api from "../../service/api"
 
-const Cadastro = () => {
+const Cadastro = ({email}) => {
     const handleSubmit = async values => {
       const { data } = await api.post('/create-user', values);
       localStorage.setItem('email', data["email"]);
-
+      email(data["email"]);
     }
     return (
         <>

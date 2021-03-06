@@ -14,17 +14,19 @@ def handler(event,context):
 
         res = table.get_item(
            Key={
-               "string":{
-                   "email": email,
-                   "password": password
-               }
+               "email": email
            } 
         )
-        print(res)
+        item = res["Item"]
+        print(return_message("Login Efetuado com sucesso", 200, "status", email))
+        if (item["email"] == email) and (item["password"] == password):
+            return return_message("Login Efetuado com sucesso", 200, "status", email)
+        else:
+            return return_message("Login ou Senha incorretos", 400, "erro", "")
 
 def return_message(mensage, status_code, mensage_key, email):
     return {
             'statusCode': status_code,
-            'headers': { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
+            'headers': { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*",'Access-Control-Allow-Methods': 'POST', 'Access-Control-Allow-Headers': 'Content-Type, X-API-KEY', },
             'body': json.dumps({mensage_key: mensage, "email": email})
         }
