@@ -3,13 +3,12 @@ import json
 import os
 
 def handler(event,context):
-    data = json.loads(event["body"])
     dynamodb = boto3.resource("dynamodb")
-    if("username" in data) and ("password" in data) and ("email" in data):
+    if("username" in event) and ("password" in event) and ("email" in event):
         # get the data
-        username = data["username"]
-        password = data["password"]
-        email = data["email"]
+        username = event["username"]
+        password = event["password"]
+        email = event["email"]
         table_name = os.environ["DYNAMO_TABLE"]
         table = dynamodb.Table(table_name)
         res = table.put_item(
@@ -21,15 +20,11 @@ def handler(event,context):
         )
         r_status = int(res["ResponseMetadata"]["HTTPStatusCode"])
         if(r_status == 200):
-            return return_message("Itens Inseridos com sucesso!", 200, "status", email )
+            return return_message("Itens Inseridos com sucesso!", "status", email )
         else:
-            return return_message("Algo inesperado aconteceu ao inserir items na tabela", 400, "erro", "")
+            return return_message("Algo inesperado aconteceu ao inserir items na tabela", "erro", "")
     else:
-        return return_message("Erro! Parametros insuficientes!", 400, "erro",  "")
+            return return_message("Erro! Parametros insuficientes!", "erro", "" )
 
-def return_message(mensage, status_code, mensage_key, email):
-    return {
-            'statusCode': status_code,
-            'headers': { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*" },
-            'body': json.dumps({mensage_key: mensage, "email": email})
-        }
+def return_message(mensage, mensage_key, email):
+    return {mensage_key: mensage,  "email": email}
