@@ -1,5 +1,4 @@
 import boto3
-import json
 import os
 
 def handler(event,context):
@@ -15,10 +14,7 @@ def handler(event,context):
             Item={
                 "email": email,
                 "username": username,
-                "password": password,
-                "SubscriptionArn": "",
-                "Confirmed": ""
-
+                "password": password
             }
         )
         r_status = int(res["ResponseMetadata"]["HTTPStatusCode"])

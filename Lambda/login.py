@@ -1,13 +1,11 @@
-import json
 import os
 import boto3
 
 def handler(event,context):
-    data = json.loads(event["body"])
     dynamodb = boto3.resource("dynamodb")
-    if("email" in data) and ("password" in data): 
-        email = data["email"]
-        password = data["password"]
+    if("email" in event) and ("password" in event): 
+        email = event["email"]
+        password = event["password"]
 
         table_name = os.environ["DYNAMO_TABLE"]
         table = dynamodb.Table(table_name)
@@ -18,15 +16,12 @@ def handler(event,context):
            } 
         )
         item = res["Item"]
-        print(return_message("Login Efetuado com sucesso", 200, "status", email))
         if (item["email"] == email) and (item["password"] == password):
-            return return_message("Login Efetuado com sucesso", 200, "status", email)
+            return return_message("Login Efetuado com sucesso", "status", email)
         else:
-            return return_message("Login ou Senha incorretos", 400, "erro", "")
+            return return_message("Login ou Senha incorretos", "erro", "")
+    else:
+        return return_message("Login ou Senha incorretos", "erro", "")
 
-def return_message(mensage, status_code, mensage_key, email):
-    return {
-            'statusCode': status_code,
-            'headers': { 'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*",'Access-Control-Allow-Methods': 'POST', 'Access-Control-Allow-Headers': 'Content-Type, X-API-KEY', },
-            'body': json.dumps({mensage_key: mensage, "email": email})
-        }
+def return_message(mensage,  mensage_key, email):
+    return {mensage_key: mensage, "email": email}
