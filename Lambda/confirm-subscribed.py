@@ -21,12 +21,16 @@ def handler(event, context):
         SubscriptionArn=item["SubscriptionArn"]
     )
     if(res["Attributes"]["PendingConfirmation"]=="false"):
-        res_dynamo = table.put_item(
-            Item={
-                "email": email,
-                "Confirmed": True
-            }
-        )
+        res_dynamo = table.update_item(
+            Key={
+                "email": email
+            },
+            UpdateExpression="set Confirmed=:c",
+            ExpressionAttributeValues={
+                ":c": True
+            },
+            ReturnValues="NONE"
+            )
         return {"Status": "Confirmed", "Mensage":"A confirmação foi feita"}
     else:
         return {"Status": "Unconfirmed", "Mensage": "A confirmação não foi confirmada"}

@@ -15,7 +15,10 @@ def handler(event,context):
             Item={
                 "email": email,
                 "username": username,
-                "password": password
+                "password": password,
+                "SubscriptionArn": "",
+                "Confirmed": ""
+
             }
         )
         r_status = int(res["ResponseMetadata"]["HTTPStatusCode"])

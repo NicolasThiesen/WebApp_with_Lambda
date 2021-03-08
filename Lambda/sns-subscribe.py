@@ -11,13 +11,17 @@ def handler(event, context):
 
     sns = boto3.client("sns",region_name="us-east-1")
     res = sns.subscribe(TopicArn=sns_arn,Protocol="Email",Endpoint=email, ReturnSubscriptionArn=True)
-    res_dynamo = table.put_item(
-            Item={
-                "email": email,
-                "SubscriptionArn": res["SubscriptionArn"],
-                "Confirmed": False
-            }
-        )
+    res_dynamo = table.update_item(
+        Key={
+            "email": email
+        },
+        UpdateExpression="set SubscriptionArn=:s, Confirmed=:c",
+        ExpressionAttributeValues={
+            ":s": res["SubscriptionArn"],
+            ":c": False
+        },
+        ReturnValues="NONE"
+    )
     if ( res_dynamo["ResponseMetadata"]["HTTPStatusCode"] == 200) and ( res["ResponseMetadata"]["HTTPStatusCode"] == 200):
         return {"Status": "A subscrição foi feita, confirmação pendente."}
     else:
