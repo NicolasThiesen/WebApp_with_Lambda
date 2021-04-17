@@ -20,7 +20,7 @@ const Cadastro = ({email}) => {
               <Field name="email" type="email" required></Field><br></br>
               <label htmlFor="password">Senha</label>
               <Field name="password" type="password" required></Field><br></br>
-              <button type="submit">Logar</button>
+              <button type="submit">Cadastrar</button>
             </Form>
           </Formik>
         </>
