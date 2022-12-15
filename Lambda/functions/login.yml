@@ -1,0 +1,21 @@
+memorySize: 128
+timeout: 30
+handler: login.handler
+events:
+  - http:
+      path: /login
+      method: post
+      async: false
+      private: true
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - dynamodb:GetItem
+      - dynamodb:UpdateItem
+      - logs:CreateLogStream
+      - logs:PutLogEvents
+      - logs:CreateLogGroup
+      - sns:GetSubscriptionAttributes
+      - lambda:InvokeFunction
+    Resource:
+      - "*"

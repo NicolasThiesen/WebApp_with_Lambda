@@ -1,0 +1,20 @@
+memorySize: 128
+timeout: 30
+handler: subscribe.handler
+events:
+  - http:
+      path: /subscribe
+      method: post
+      async: false
+      private: true
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - dynamodb:UpdateItem
+      - logs:CreateLogStream
+      - logs:PutLogEvents
+      - logs:CreateLogGroup
+      - sns:Subscribe
+      - lambda:InvokeFunction
+    Resource:
+      - "*"

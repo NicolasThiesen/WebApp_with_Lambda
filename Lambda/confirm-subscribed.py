@@ -1,9 +1,11 @@
 import boto3
 import os
+from json import dumps, loads
 
 def handler(event, context):
+    print(event)
     table_name = os.environ["DYNAMO_TABLE"]
-    email = event["email"]
+    email = loads(event["body"])["email"]
 
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(table_name)
@@ -31,6 +33,20 @@ def handler(event, context):
             },
             ReturnValues="NONE"
             )
-        return {"Status": "Confirmed", "Mensage":"A confirmação foi feita"}
+        return {
+            "statusCode": 200,
+            'headers': {
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST'
+            },
+            "body": dumps({ "Status": "Confirmed", "Mensage":"A confirmação foi feita"})}
     else:
-        return {"Status": "Unconfirmed", "Mensage": "A confirmação não foi confirmada"}
+        return {
+            "statusCode": 200,
+            'headers': {
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST'
+            },
+             "body": dumps({"Status": "Unconfirmed", "Mensage": "A confirmação não foi confirmada"})}

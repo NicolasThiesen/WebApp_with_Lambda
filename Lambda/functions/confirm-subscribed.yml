@@ -1,0 +1,21 @@
+memorySize: 128
+timeout: 30
+handler: confirm-subscribed.handler
+events:
+  - http:
+      path: /confirm-subscription
+      method: post
+      async: false
+      private: true
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - dynamodb:GetItem
+      - dynamodb:UpdateItem
+      - logs:CreateLogStream
+      - logs:PutLogEvents
+      - logs:CreateLogGroup
+      - sns:GetSubscriptionAttributes
+      - lambda:InvokeFunction
+    Resource:
+      - "*"

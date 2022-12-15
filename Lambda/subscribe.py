@@ -1,10 +1,11 @@
 import boto3
 import os
-
+from json import dumps, loads
 def handler(event, context):
+    print(event)
     sns_arn = os.environ["SNS_ARN"]
     table_name = os.environ["DYNAMO_TABLE"]
-    email = event["email"]
+    email = loads(event["body"])["email"]
 
     dynamodb = boto3.resource("dynamodb")
     table = dynamodb.Table(table_name)
@@ -23,6 +24,13 @@ def handler(event, context):
         ReturnValues="NONE"
     )
     if ( res_dynamo["ResponseMetadata"]["HTTPStatusCode"] == 200) and ( res["ResponseMetadata"]["HTTPStatusCode"] == 200):
-        return {"Status": "A subscrição foi feita, confirmação pendente."}
+        return {
+            "statusCode": 200,
+            'headers': {
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST'
+            },
+            "body": dumps({"Status": "A subscrição foi feita, confirmação pendente."})}
     else:
-        return {"Status": "Algo de errado aconteceu ao subeescrever o item."}
+        return {"statusCode":400, "body": dumps({"Status": "Algo de errado aconteceu ao subeescrever o item."})}

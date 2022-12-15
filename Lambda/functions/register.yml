@@ -1,0 +1,21 @@
+memorySize: 128
+timeout: 30
+handler: register.handler
+events:
+  - http:
+      path: /create-user
+      method: post
+      async: false
+      private: true
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - dynamodb:GetItem
+      - dynamodb:PutItem
+      - logs:CreateLogStream
+      - logs:PutLogEvents
+      - logs:CreateLogGroup
+      - sns:GetSubscriptionAttributes
+      - lambda:InvokeFunction
+    Resource:
+      - "*"

@@ -1,0 +1,52 @@
+service: login-system
+
+custom:
+  version: 1
+  stage: prod
+  region: us-eat-1
+  apiKeys:
+    - name: front
+  
+provider:
+  name: aws
+  stage: ${self:custom.stage}
+  stackTags:
+    Owner: Solvimm
+  runtime: python3.8
+  region: us-east-1
+  logRetentionInDays: 30
+  apiGateway:
+    apiKeySourceType: HEADER
+    metrics: true
+
+  logs:
+    restApi: true
+  tracing:
+    apiGateway: true
+    lambda: true
+  environment:
+    DYNAMO_TABLE: my-celebrities
+    SNS_ARN: arn:aws:sns:us-east-1:411470295704:helth-critical
+# deploymentBucket:
+#   name: ${file(./.config.json):bucket_${self:provider.stage}} 
+#   versioning: true
+#   blockPublicAccess: true
+#   serverSideEncryption: AES256
+
+functions:
+  confirm-subscribed: ${file(functions/confirm-subscribed.yml)}
+  login: ${file(functions/login.yml)}
+  message: ${file(functions/message.yml)}
+  register: ${file(functions/register.yml)}
+  subscribe: ${file(functions/subscribe.yml)}
+
+
+# resources: ${file(resources.yml)}
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-add-api-key
+  # - serverless-plugin-aws-alerts
+  # - serverless-python-requirements
+  # - serverless-deployment-bucket
+#  - serverless-dotenv-plugin
