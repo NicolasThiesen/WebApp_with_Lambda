@@ -5,8 +5,7 @@ import api from "../../service/api"
 const Login = ({email}) => {
     const handleSubmit = async values => {
         const { data } = await api.post('/login', values);
-        localStorage.setItem('email', data["email"]);
-        email(data["email"]);
+        email(values["email"]);
       }
     return (
         <>

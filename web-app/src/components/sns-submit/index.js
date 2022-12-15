@@ -4,7 +4,7 @@ import api from "../../service/api"
 
 const Submit = () => {
     const handleSubmit = async values => {
-        const { data } = await api.post('/invite-message', values);
+        const { data } = await api.post('/message', values);
         alert(data.Status)
       }
     return (

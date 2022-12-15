@@ -13,11 +13,12 @@ function App (){
     const [enviar, setEnviar] = useState(false);
     
     const changeEmail = (email) => {
+        console.log(email);
         setEmail(email);
     }
-    useEffect(() => {
-        localStorage.setItem("email","");    
-    }, []);
+    // useEffect(() => {
+    //     localStorage.setItem("email","");    
+    // }, []);
     useEffect(() => {
         setLogin(false);
         setCadastro(false);
@@ -37,7 +38,8 @@ function App (){
     }
 
     const handle_subscribe = async () => {
-        await api.post("/subscribe",{"email":email});
+        const response = await api.post("/subscribe",{"email":email});
+        console.log(response)
         setReload(true);
     }
 

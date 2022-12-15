@@ -6,8 +6,7 @@ import api from "../../service/api"
 const Cadastro = ({email}) => {
     const handleSubmit = async values => {
       const { data } = await api.post('/create-user', values);
-      localStorage.setItem('email', data["email"]);
-      email(data["email"]);
+      email(values["email"]);
     }
     return (
         <>
